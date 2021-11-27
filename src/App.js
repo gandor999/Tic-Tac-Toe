@@ -18,6 +18,11 @@ function App() {
     const [xPoint, setXPoint] = useState(0);
     const [oPoint, setOPoint] = useState(0);
     const [timesClicked, setTimesClicked] = useState(0);
+    const [playerx, setPlayerX] = useState('No player');
+    const [playero, setPlayerO] = useState('No player');
+
+    const [playernamex, setPlayerNameX] = useState('No player');
+    const [playernameo, setPlayerNameO] = useState('No player');
 
     console.log(`X turn: ${xTurn}`)
     console.log(`O turn: ${oTurn}`)
@@ -25,11 +30,18 @@ function App() {
     console.log(`opoint: ${oPoint}`)
     console.log(`timesClicked: ${timesClicked}`)
     console.log(`whoWin: ${whoWin}`)
+    console.log(`playerx: ${playerx}`)
+    console.log(`playero: ${playero}`)
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [show2, setShow2] = useState(false);
+
+    const handleClose2 = () => setShow2(false);
+    const handleShow2 = () => setShow2(true);
 
       // X rows and Columns
     let [xr1c1, setXR1C1] = useState({status: false, isClicked: false});
@@ -201,6 +213,16 @@ function App() {
       setOPoint(0);
       setXPoint(0);
     }
+
+    function saveName(){
+      setPlayerNameX(playerx);
+      setPlayerNameO(playero);
+      handleClose2();
+    }
+
+    function clearName(setName){
+      setName('No player');
+    }
   
 
   return (
@@ -208,15 +230,16 @@ function App() {
         <div className="p-5 mb-4">
           {
             (xTurn) ? 
-              <h3>Turn <img id="xturn" src={wrongMark} /></h3>
+              <h3>Turn <img className="xturn" src={wrongMark} /></h3>
             :
-              <h3>Turn <img id="oturn" src={circle} /></h3>
+              <h3>Turn <img className="oturn" src={circle} /></h3>
           }
         </div>
 
         <div className="d-flex">
           <div className="pr-5 mr-5">
-            <h5 className="">X Score:</h5>
+            <p className="text-center">{playernamex}</p>
+            <h5 className="text-center"><img className="xturn pb-1" src={wrongMark} /> Score:</h5>
             <h5 className="text-center">{xPoint}</h5>
           </div>
 
@@ -336,7 +359,8 @@ function App() {
           </div>
 
           <div className="ml-5 pl-5">
-            <h5>O Score:</h5>
+            <p className="text-center">{playernameo}</p>
+            <h5 className="text-center pb-1"><img className="oturn" src={circle} /> Score:</h5>
             <h5 className="text-center">{oPoint}</h5>
           </div>
         </div>
@@ -346,8 +370,9 @@ function App() {
         
 
         <div className="mt-4">
-          <Button className="mr-4" onClick={playAgain}>Reset Board</Button>
-          <Button onClick={resetScore}>Reset Score</Button>
+          <Button variant="warning" className="mr-4" onClick={playAgain}>Reset Board</Button>
+          <Button variant="warning" className="mr-4" onClick={resetScore}>Reset Score</Button>
+          <Button variant="danger" onClick={handleShow2}>Edit / Remove Players</Button>
         </div>
 
         
@@ -372,6 +397,37 @@ function App() {
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal show={show2} onHide={handleClose2}>
+          <Modal.Header className="text-center">
+            <Modal.Title>Player Roster</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="d-flex">
+              <Form.Control 
+                type="text" 
+                placeholder="Player1"
+                value={playerx} 
+                onChange={e => setPlayerX(e.target.value)}
+              /> <Button variant="danger" className="ml-2" onClick={() => clearName(setPlayerX)}>X</Button>
+            </div>
+            <div className="d-flex mt-4">
+              <Form.Control 
+                type="text" 
+                placeholder="Player2"
+                value={playero}
+                onChange={e => setPlayerO(e.target.value)}
+              /> <Button variant="danger" className="ml-2" onClick={() => clearName(setPlayerO)}>X</Button>
+            </div>
+          </Modal.Body>
+          <Modal.Footer className="text-center">
+            <Button variant="primary" type="submit" onClick={saveName}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+
       </div>
       
   )
