@@ -20,6 +20,7 @@ function App() {
     const [timesClicked, setTimesClicked] = useState(0);
     const [playerx, setPlayerX] = useState('No player');
     const [playero, setPlayerO] = useState('No player');
+    const [isDoneLoading, setIsDoneLoading] = useState(false);
 
     const [playernamex, setPlayerNameX] = useState('No player');
     const [playernameo, setPlayerNameO] = useState('No player');
@@ -32,6 +33,8 @@ function App() {
     console.log(`whoWin: ${whoWin}`)
     console.log(`playerx: ${playerx}`)
     console.log(`playero: ${playero}`)
+    console.log(`isDoneLoading: ${isDoneLoading}`)
+
 
     const [show, setShow] = useState(false);
 
@@ -70,65 +73,55 @@ function App() {
     let [or3c3, setOR3C3] = useState({status: false, isClicked: false});
 
 
+    useEffect(() => {
 
-    function checkingDraw(){
-
-      // When X wins
-      if(
-        (xr1c1.status && xr1c2.status && xr1c3.status) ||
-        (xr2c1.status && xr2c2.status && xr2c3.status) ||
-        (xr3c1.status && xr3c2.status && xr3c3.status)
-      ){setWhoWin('x')}
-
-
-      if(
-        (xr3c1.status && xr2c1.status && xr1c1.status) ||
-        (xr3c2.status && xr2c2.status && xr1c2.status) ||
-        (xr3c3.status && xr2c3.status && xr1c3.status)
-      ){setWhoWin('x')}
+        // When X wins
+        if(
+          (xr1c1.status && xr1c2.status && xr1c3.status) ||
+          (xr2c1.status && xr2c2.status && xr2c3.status) ||
+          (xr3c1.status && xr3c2.status && xr3c3.status)
+        ){setWhoWin('x')}
 
 
-      if(
-        (xr3c3.status && xr2c2.status && xr1c1.status) ||
-        (xr3c1.status && xr2c2.status && xr1c3.status)
-      ){setWhoWin('x')}
+        else if(
+          (xr3c1.status && xr2c1.status && xr1c1.status) ||
+          (xr3c2.status && xr2c2.status && xr1c2.status) ||
+          (xr3c3.status && xr2c3.status && xr1c3.status)
+        ){setWhoWin('x')}
 
 
-      // When O wins
-      if(
-        (or1c1.status && or1c2.status && or1c3.status) ||
-        (or2c1.status && or2c2.status && or2c3.status) ||
-        (or3c1.status && or3c2.status && or3c3.status)
-      ){setWhoWin('o')}
+        else if(
+          (xr3c3.status && xr2c2.status && xr1c1.status) ||
+          (xr3c1.status && xr2c2.status && xr1c3.status)
+        ){setWhoWin('x')}
 
 
-      if(
-        (or3c1.status && or2c1.status && or1c1.status) ||
-        (or3c2.status && or2c2.status && or1c2.status) ||
-        (or3c3.status && or2c3.status && or1c3.status)
-      ){setWhoWin('o')}
+        // When O wins
+        else if(
+          (or1c1.status && or1c2.status && or1c3.status) ||
+          (or2c1.status && or2c2.status && or2c3.status) ||
+          (or3c1.status && or3c2.status && or3c3.status)
+        ){setWhoWin('o')}
 
 
-      if(
-        (or3c3.status && or2c2.status && or1c1.status) ||
-        (or3c1.status && or2c2.status && or1c3.status)
-      ){setWhoWin('o')}
-
-      
-    }
+        else if(
+          (or3c1.status && or2c1.status && or1c1.status) ||
+          (or3c2.status && or2c2.status && or1c2.status) ||
+          (or3c3.status && or2c3.status && or1c3.status)
+        ){setWhoWin('o')}
 
 
+        else if(
+          (or3c3.status && or2c2.status && or1c1.status) ||
+          (or3c1.status && or2c2.status && or1c3.status)
+        ){setWhoWin('o')}
 
-    useEffect(async () => {
+        else if(whoWin == ''&& timesClicked == 9){
+          setWhoWin('draw');
+        }
 
-      await checkingDraw();
+    }, [timesClicked])
 
-      if(timesClicked == 9 && whoWin == ''){
-        setWhoWin('draw');
-        handleShow();
-      }
-
-    }, [xTurn, oTurn])
 
 
     useEffect(() => {
@@ -421,6 +414,9 @@ function App() {
             </div>
           </Modal.Body>
           <Modal.Footer className="text-center">
+            <Button variant="warning" type="submit" onClick={handleClose2 }>
+              Cancel
+            </Button>
             <Button variant="primary" type="submit" onClick={saveName}>
               Save
             </Button>
