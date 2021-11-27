@@ -8,8 +8,6 @@ import './App.css';
 import Swal from 'sweetalert2';
 
 
-
-
 function App() {
     
     const [xTurn, setXTurn] = useState(true);
@@ -219,8 +217,8 @@ function App() {
   
 
   return (
-      <div className="d-flex flex-column table-wrapper justify-content-center align-items-center p-5">
-        <div className="p-5 mb-4">
+      <div className="d-flex flex-column table-wrapper justify-content-center align-items-center p-2">
+        <div className="p-5 mb-5">
           {
             (xTurn) ? 
               <h3>Turn <img className="xturn" src={wrongMark} /></h3>
@@ -363,9 +361,9 @@ function App() {
         
 
         <div className="mt-4">
-          <Button variant="warning" className="mr-4" onClick={playAgain}>Reset Board</Button>
-          <Button variant="warning" className="mr-4" onClick={resetScore}>Reset Score</Button>
-          <Button variant="danger" onClick={handleShow2}>Edit / Remove Players</Button>
+          <Button size="sm" variant="warning" className="mr-4" onClick={playAgain}>Reset Board</Button>
+          <Button size="sm" variant="warning" className="mr-4" onClick={resetScore}>Reset Score</Button>
+          <Button size="sm" variant="danger" onClick={handleShow2}>Edit / Remove Players</Button>
         </div>
 
         
