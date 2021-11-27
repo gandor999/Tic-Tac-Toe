@@ -17,6 +17,10 @@ img {
   width: 40px;
 }
 
+#xturn, #oturn {
+  width: 20px;
+}
+
 td {
   cursor: pointer;
 }
@@ -28,3 +32,9 @@ td {
 .provider {
   display: none;
 }
+
+/*@media (max-width: 600px){
+  p {
+    font-size: 55%;
+  }
+}*/

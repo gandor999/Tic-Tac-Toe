@@ -5,7 +5,6 @@ import wrongMark from './images/wrongMark.png';
 import circle from './images/circle.png';
 import white from './images/white.png';
 import './App.css';
-
 import Swal from 'sweetalert2';
 
 
@@ -25,6 +24,7 @@ function App() {
     console.log(`xpoint: ${xPoint}`)
     console.log(`opoint: ${oPoint}`)
     console.log(`timesClicked: ${timesClicked}`)
+    console.log(`whoWin: ${whoWin}`)
 
     const [show, setShow] = useState(false);
 
@@ -59,7 +59,7 @@ function App() {
 
 
 
-    useEffect(() => {
+    function checkingDraw(){
 
       // When X wins
       if(
@@ -102,10 +102,19 @@ function App() {
         (or3c1.status && or2c2.status && or1c3.status)
       ){setWhoWin('o')}
 
-      setTimeout(() => {
-        if(timesClicked == 9 && whoWin != 'x' && whoWin != 'o'){setWhoWin('draw')}
-      }, 1000)
-        
+      
+    }
+
+
+
+    useEffect(async () => {
+
+      await checkingDraw();
+
+      if(timesClicked == 9 && whoWin == ''){
+        setWhoWin('draw');
+        handleShow();
+      }
 
     }, [xTurn, oTurn])
 
@@ -124,6 +133,7 @@ function App() {
       if(whoWin == 'draw'){
         handleShow();
       }
+
     }, [whoWin])
 
     console.log(whoWin);
@@ -185,130 +195,165 @@ function App() {
 
       setWhoWin('');
     }
+
+
+    function resetScore(){
+      setOPoint(0);
+      setXPoint(0);
+    }
   
 
   return (
-      <div className="d-flex flex-column table-wrapper justify-content-center align-items-center mt-5 p-5">
-        <Table borderless className="w-25">
-          
-          <tbody className="text-center">
-            <tr className="border-bottom">
-              <td className="border-right" onClick={() => changeTurn(xr1c1, or1c1, setXR1C1, setOR1C1)}>
-                {
-                  (xr1c1.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or1c1.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td className="border-right" onClick={() => changeTurn(xr1c2, or1c2, setXR1C2, setOR1C2)}>
-                {
-                  (xr1c2.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or1c2.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td onClick={() => changeTurn(xr1c3, or1c3, setXR1C3, setOR1C3)}>
-                {
-                  (xr1c3.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or1c3.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-            </tr>
-            <tr className="border-bottom">
-              <td className="border-right" onClick={() => changeTurn(xr2c1, or2c1, setXR2C1, setOR2C1)}>
-                {
-                  (xr2c1.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or2c1.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td className="border-right" onClick={() => changeTurn(xr2c2, or2c2, setXR2C2, setOR2C2)}>
-                {
-                  (xr2c2.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or2c2.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td onClick={() => changeTurn(xr2c3, or2c3, setXR2C3, setOR2C3)}>
-                {
-                  (xr2c3.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or2c3.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              
-            </tr>
-            <tr>
-              <td className="border-right" onClick={() => changeTurn(xr3c1, or3c1, setXR3C1, setOR3C1)}>
-                {
-                  (xr3c1.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or3c1.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td className="border-right" onClick={() => changeTurn(xr3c2, or3c2, setXR3C2, setOR3C2)}>
-                {
-                  (xr3c2.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or3c2.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              <td onClick={() => changeTurn(xr3c3, or3c3, setXR3C3, setOR3C3)}>
-                {
-                  (xr3c3.status) ?
-                    <img src={wrongMark} />
-                  :
-                    (or3c3.status) ?
-                      <img src={circle} />
-                    :
-                      <img src={white} />
-                }
-              </td>
-              
-            </tr>
-            
-          </tbody>
-        </Table>
-
-        <div className="d-flex">
-          <h4 className="p-5">X Score: {xPoint}</h4>
-          <h4 className="p-5">O Score: {oPoint}</h4>
+      <div className="d-flex flex-column table-wrapper justify-content-center align-items-center p-5">
+        <div className="p-5 mb-4">
+          {
+            (xTurn) ? 
+              <h3>Turn <img id="xturn" src={wrongMark} /></h3>
+            :
+              <h3>Turn <img id="oturn" src={circle} /></h3>
+          }
         </div>
 
-        <Modal show={show} onHide={handleClose}>
+        <div className="d-flex">
+          <div className="pr-5 mr-5">
+            <h5 className="">X Score:</h5>
+            <h5 className="text-center">{xPoint}</h5>
+          </div>
+
+          <div className="mr-5 ml-5 mb-5">
+            <Table borderless className="w-25">
+              <tbody className="text-center">
+                <tr className="border-bottom">
+                  <td className="border-right" onClick={() => changeTurn(xr1c1, or1c1, setXR1C1, setOR1C1)}>
+                    {
+                      (xr1c1.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or1c1.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td className="border-right" onClick={() => changeTurn(xr1c2, or1c2, setXR1C2, setOR1C2)}>
+                    {
+                      (xr1c2.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or1c2.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td onClick={() => changeTurn(xr1c3, or1c3, setXR1C3, setOR1C3)}>
+                    {
+                      (xr1c3.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or1c3.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                </tr>
+                <tr className="border-bottom">
+                  <td className="border-right" onClick={() => changeTurn(xr2c1, or2c1, setXR2C1, setOR2C1)}>
+                    {
+                      (xr2c1.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or2c1.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td className="border-right" onClick={() => changeTurn(xr2c2, or2c2, setXR2C2, setOR2C2)}>
+                    {
+                      (xr2c2.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or2c2.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td onClick={() => changeTurn(xr2c3, or2c3, setXR2C3, setOR2C3)}>
+                    {
+                      (xr2c3.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or2c3.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  
+                </tr>
+                <tr>
+                  <td className="border-right" onClick={() => changeTurn(xr3c1, or3c1, setXR3C1, setOR3C1)}>
+                    {
+                      (xr3c1.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or3c1.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td className="border-right" onClick={() => changeTurn(xr3c2, or3c2, setXR3C2, setOR3C2)}>
+                    {
+                      (xr3c2.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or3c2.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  <td onClick={() => changeTurn(xr3c3, or3c3, setXR3C3, setOR3C3)}>
+                    {
+                      (xr3c3.status) ?
+                        <img src={wrongMark} />
+                      :
+                        (or3c3.status) ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+                  </td>
+                  
+                </tr>
+                
+              </tbody>
+            </Table>
+          </div>
+
+          <div className="ml-5 pl-5">
+            <h5>O Score:</h5>
+            <h5 className="text-center">{oPoint}</h5>
+          </div>
+        </div>
+
+      
+
+        
+
+        <div className="mt-4">
+          <Button className="mr-4" onClick={playAgain}>Reset Board</Button>
+          <Button onClick={resetScore}>Reset Score</Button>
+        </div>
+
+        
+
+
+        <Modal show={show}>
           <Modal.Header className="text-center">
             {
               (whoWin == 'x') ?
