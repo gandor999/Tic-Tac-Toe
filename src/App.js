@@ -41,7 +41,6 @@ const App = () => {
   whosPlaying,lastWinner,
   board
  } = current.context;
-    
     const [xTurn, setXTurn] = useState(true);
     const [oTurn, setOTurn] = useState(false);
     const [whoWin, setWhoWin] = useState('');
@@ -152,8 +151,6 @@ const App = () => {
 
     }, [timesClicked])
 
-
-
     useEffect(() => {
       if(whoWin == 'x'){
         setXPoint(xPoint + 1);
@@ -170,10 +167,6 @@ const App = () => {
       }
 
     }, [whoWin])
-
-    console.log(whoWin);
-
-
 
     function changeTurn(x, o, setX, setO){
 
@@ -418,8 +411,7 @@ const App = () => {
           <Button size="sm" variant="danger" onClick={handleShow2}>Edit / Remove Players</Button>
         </div>
 
-        
-        <Modal show={show || current.matches("win")}>
+        <Modal show={show || current.matches("win") || current.matches("draw")}>
           <Modal.Header className="text-center">
             {
               (whoWin == 'x' || current.context.lastWinner === 'x') ?
