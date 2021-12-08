@@ -247,12 +247,11 @@ const App = () => {
       setName('No player');
     }
   
-
   return (
       <div className="d-flex flex-column table-wrapper justify-content-center align-items-center p-2">
         <div className="p-5 mb-5">
           {
-            (xTurn) ? 
+            (whosPlaying === 'x') ? 
               <h3>Turn <img className="xturn" src={wrongMark} /></h3>
             :
               <h3>Turn <img className="oturn" src={circle} /></h3>
@@ -278,10 +277,10 @@ const App = () => {
                 onClick={(_) => send({ type: "ONCLICK", whosPlaying, value: i })}
               >
                 {
-                      (current.context.board[i]==='x') ?
+                      (board[i]==='x') ?
                         <img src={wrongMark} />
                       :
-                        (current.context.board[i]==='o') ?
+                        (board[i]==='o') ?
                           <img src={circle} />
                         :
                           <img src={white} />
@@ -423,10 +422,10 @@ const App = () => {
         <Modal show={show || current.matches("win")}>
           <Modal.Header className="text-center">
             {
-              (whoWin == 'x') ?
+              (whoWin == 'x' || current.context.lastWinner === 'x') ?
                 <Modal.Title>X Wins!</Modal.Title>
               :
-                (whoWin == 'o') ?
+                (whoWin == 'o' || current.context.lastWinner === 'o') ?
                   <Modal.Title>O Wins!</Modal.Title>
                 :
                   <Modal.Title>Draw</Modal.Title>
