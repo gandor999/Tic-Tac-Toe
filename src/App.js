@@ -7,10 +7,10 @@ import { ticTacToeMachine } from "./machine";
 import { useMachine } from "@xstate/react";
 import './App.css';
 
-function range(start, end) {
-  return Array(end - start)
+function range(length) {
+  return Array(length)
     .fill(null)
-    .map((_, i) => i + start);
+    .map((_, i) => i);
 }
 
 function generateBoardBoxClassName(index){
@@ -269,7 +269,7 @@ const App = () => {
           <Table borderless className="w-25">
             <div className="text-center table-board">
              
-            {range(0, 9).map((i) => {
+            {range(9).map((i) => {
             return (
               <div
                 key={i}
