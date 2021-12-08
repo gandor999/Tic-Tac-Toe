@@ -41,6 +41,7 @@ const App = () => {
   whosPlaying,lastWinner,
   board
  } = current.context;
+ console.log("Global context: ", current.context);
     const [xTurn, setXTurn] = useState(true);
     const [oTurn, setOTurn] = useState(false);
     const [whoWin, setWhoWin] = useState('');
@@ -425,7 +426,7 @@ const App = () => {
           </Modal.Header>
           
           <Modal.Footer className="text-center">
-            <Button variant="warning" onClick={playAgain}>
+            <Button variant="warning" onClick={(_) => send({ type: "anotherRound" })}>
               Another Round
             </Button>
           </Modal.Footer>
