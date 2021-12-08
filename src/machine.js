@@ -53,6 +53,22 @@ const setWinner = assign({
   lastWinner: context => (context.whosPlaying === 'x' ? 'o' : 'x')
 });
 
+const updateScore = assign({
+  score: (context) => {
+    if(context.lastWinner === 'o') {
+      return {
+        ...context.score,
+        o: context.score.o++
+      }
+    } else {
+      return {
+        ...context.score,
+        x: context.score.x++
+      }
+    }
+  }
+});
+
 const ticTacToeMachine = createMachine({
   id: 'ticTactToe',
   initial: 'onGame',
@@ -72,7 +88,7 @@ const ticTacToeMachine = createMachine({
           { target: 'win', cond: 'evaluateWin', actions: 'setWinner' },
           { target: 'draw', cond: 'evaluateDraw' }
         ],
-        ONCLICK: [
+        ON_CLICK: [
           {
             target: 'onGame',
             cond: 'isValidMove',
@@ -83,7 +99,7 @@ const ticTacToeMachine = createMachine({
     },
     win: {
       on: {
-        anotherRound: {
+        ANOTHER_ROUND: {
           target: 'onGame'
         }
       },
@@ -91,7 +107,7 @@ const ticTacToeMachine = createMachine({
     },
     draw: {
       on: {
-        anotherRound: {
+        ANOTHER_ROUND: {
           target: 'onGame'
         }
       },
@@ -106,15 +122,7 @@ const ticTacToeMachine = createMachine({
     isValidMove
   },
   actions: {
-    updateScore: (context, event) => {
-      const { winner } = event;
-
-      if(winner === 'o') {
-        context.score.o++;
-      }else{
-        context.score.x++;
-      }
-    },
+    updateScore,
     resetBoard: (context, event) => {
       // Clean all the context varaibles in order to start a new game board
       context.score.o = 0;

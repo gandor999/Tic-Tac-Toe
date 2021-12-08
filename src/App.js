@@ -36,11 +36,16 @@ function generateBoardBoxClassName(index){
 }
 
 const App = () => {
-  const [current, send] = useMachine(ticTacToeMachine);
-  const { score,
-  whosPlaying,lastWinner,
-  board
- } = current.context;
+    const [current, send] = useMachine(ticTacToeMachine);
+    const { 
+      score,
+      whosPlaying,
+      lastWinner,
+      board
+    } = current.context;
+    console.log("current", current.context);
+
+    
     const [xTurn, setXTurn] = useState(true);
     const [oTurn, setOTurn] = useState(false);
     const [whoWin, setWhoWin] = useState('');
@@ -49,7 +54,6 @@ const App = () => {
     const [timesClicked, setTimesClicked] = useState(0);
     const [playerx, setPlayerX] = useState('No player');
     const [playero, setPlayerO] = useState('No player');
-    const [isDoneLoading, setIsDoneLoading] = useState(false);
 
     const [playernamex, setPlayerNameX] = useState('No player');
     const [playernameo, setPlayerNameO] = useState('No player');
@@ -62,7 +66,6 @@ const App = () => {
     console.log(`whoWin: ${whoWin}`)
     console.log(`playerx: ${playerx}`)
     console.log(`playero: ${playero}`)
-    console.log(`isDoneLoading: ${isDoneLoading}`)
 
 
     const [show, setShow] = useState(false);
@@ -255,35 +258,35 @@ const App = () => {
           <div className="pr-5 mr-5">
             <p className="text-center">{playernamex}</p>
             <h5 className="text-center"><img className="xturn pb-1" src={wrongMark} /> Score:</h5>
-            <h5 className="text-center">{xPoint}</h5>
+            <h5 className="text-center">{score.x}</h5>
           </div>
 
           <div className="mr-5 ml-5 mb-5">
           <Table borderless className="w-25">
             <div className="text-center table-board">
              
-            {range(9).map((i) => {
-            return (
-              <div
-                key={i}
-                className = {generateBoardBoxClassName(i)}
-                onClick={(_) => send({ type: "ONCLICK", whosPlaying, value: i })}
-              >
-                {
-                      (board[i]==='x') ?
-                        <img src={wrongMark} />
-                      :
-                        (board[i]==='o') ?
-                          <img src={circle} />
-                        :
-                          <img src={white} />
-                    }
-              </div>
-            );
-          })}
-          </div>
+              {range(9).map((i) => {
+                return (
+                  <div
+                    key={i}
+                    className = {generateBoardBoxClassName(i)}
+                    onClick={() => send({ type: "ON_CLICK", whosPlaying, value: i })}
+                  >
+                    {
+                          (board[i] === 'x') ?
+                            <img src={wrongMark} />
+                          :
+                            (board[i] === 'o') ?
+                              <img src={circle} />
+                            :
+                              <img src={white} />
+                        }
+                  </div>
+                );
+              })}
+            </div>
           </Table>
-            <Table borderless className="w-25">
+            {/*<Table borderless className="w-25">
               <tbody className="text-center">
                 <tr className="border-bottom">
                   <td className="border-right" onClick={() => changeTurn(xr1c1, or1c1, setXR1C1, setOR1C1)}>
@@ -394,13 +397,13 @@ const App = () => {
                 </tr>
                 
               </tbody>
-            </Table>
+                  </Table> */}
           </div>
 
           <div className="ml-5 pl-5">
             <p className="text-center">{playernameo}</p>
             <h5 className="text-center pb-1"><img className="oturn" src={circle} /> Score:</h5>
-            <h5 className="text-center">{oPoint}</h5>
+            <h5 className="text-center">{score.o}</h5>
           </div>
         </div>
         
@@ -425,7 +428,7 @@ const App = () => {
           </Modal.Header>
           
           <Modal.Footer className="text-center">
-            <Button variant="warning" onClick={playAgain}>
+            <Button variant="warning" onClick={() => send('ANOTHER_ROUND')}>
               Another Round
             </Button>
           </Modal.Footer>
