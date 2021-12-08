@@ -15,7 +15,7 @@ const evaluateWin = (ctx) => {
 
   for (let line of winningLines) {
     const xWon = line.every(index => {
-      return board[index] === "x";
+      return board[index] === 'x';
     });
 
     if (xWon) {
@@ -23,7 +23,7 @@ const evaluateWin = (ctx) => {
     }
 
     const oWon = line.every(index => {
-      return board[index] === "o";
+      return board[index] === 'o';
     });
 
     if (oWon) {
@@ -37,14 +37,20 @@ const isValidMove = (ctx, event) => {
   return ctx.board[event.value] === null;
 };
 
+const evaluateDraw = (ctx) => !ctx.board.includes(null);
+
 const updateBoard = assign({
   board: (context, event) => {
     const updatedBoard = [...context.board];
     updatedBoard[event.value] = context.whosPlaying;
+
     return updatedBoard;
   },
-  whosPlaying: context => (context.whosPlaying === "x" ? "o" : "x"),
-  lastWinner: context =>  context.whosPlaying
+  whosPlaying: context => (context.whosPlaying === 'x' ? 'o' : 'x')
+});
+
+const setWinner = assign({
+  lastWinner: context => (context.whosPlaying === 'x' ? 'o' : 'x')
 });
 
 const ticTacToeMachine = createMachine({
@@ -62,20 +68,17 @@ const ticTacToeMachine = createMachine({
   states: {
     onGame: {
       on: {
-        "": [
-          { target: "win", cond: "evaluateWin" },
-          { target: "draw", cond: "evaluateDraw" }
+        '': [
+          { target: 'win', cond: 'evaluateWin', actions: 'setWinner' },
+          { target: 'draw', cond: 'evaluateDraw' }
         ],
         ONCLICK: [
           {
             target: 'onGame',
-            cond: "isValidMove",
-            actions: "updateBoard"
+            cond: 'isValidMove',
+            actions: 'updateBoard'
           }
         ]
-      },
-      meta: {
-        message: 'hola wey'
       }
     },
     win: {
@@ -99,16 +102,14 @@ const ticTacToeMachine = createMachine({
 {
   guards: {
     evaluateWin,
-    evaluateDraw: (context) => {
-      return false;
-    },
+    evaluateDraw,
     isValidMove
   },
   actions: {
     updateScore: (context, event) => {
       const { winner } = event;
 
-      if(winner === "o") {
+      if(winner === 'o') {
         context.score.o++;
       }else{
         context.score.x++;
@@ -120,7 +121,8 @@ const ticTacToeMachine = createMachine({
       context.score.x = 0;
       context.board = Array(9).fill(null);
     },
-    updateBoard
+    updateBoard,
+    setWinner
   }
 });
 
