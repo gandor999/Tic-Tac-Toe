@@ -55,18 +55,25 @@ const setWinner = assign({
 
 const updateScore = assign({
   score: (context) => {
-    if(context.lastWinner === 'o') {
+    const { lastWinner } = context;
+
+    if(lastWinner === 'o') {
       return {
         ...context.score,
-        o: context.score.o++
+        o: ++context.score.o
       }
     } else {
       return {
         ...context.score,
-        x: context.score.x++
+        x: ++context.score.x
       }
     }
   }
+});
+
+const resetBoard = assign({
+  board: () => Array(9).fill(null),
+  lastWinner: () => null
 });
 
 const ticTacToeMachine = createMachine({
@@ -123,12 +130,7 @@ const ticTacToeMachine = createMachine({
   },
   actions: {
     updateScore,
-    resetBoard: (context, event) => {
-      // Clean all the context varaibles in order to start a new game board
-      context.score.o = 0;
-      context.score.x = 0;
-      context.board = Array(9).fill(null);
-    },
+    resetBoard,
     updateBoard,
     setWinner
   }
