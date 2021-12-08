@@ -1,6 +1,38 @@
 import { createMachine } from 'xstate';
 
-const ticTactToeMachine = createMachine({
+const evaluateWin = (ctx) => {
+  const { board } = ctx;
+  const winningLines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  for (let line of winningLines) {
+    const xWon = line.every(index => {
+      return board[index] === "x";
+    });
+
+    if (xWon) {
+      return true;
+    }
+
+    const oWon = line.every(index => {
+      return board[index] === "o";
+    });
+
+    if (oWon) {
+      return true;
+    }
+  }
+};
+
+const ticTacToeMachine = createMachine({
   id: 'ticTactToe',
   initial: 'onGame',
   context: {
@@ -54,9 +86,7 @@ const ticTactToeMachine = createMachine({
 },
 {
   guards: {
-    evaluateWin: (context) => {
-      return false;
-    },
+    evaluateWin,
     evaluateDraw: (context) => {
       return false;
     }
@@ -74,4 +104,4 @@ const ticTactToeMachine = createMachine({
   }
 });
 
-export { ticTactToeMachine };
+export { ticTacToeMachine };

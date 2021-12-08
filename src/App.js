@@ -1,14 +1,46 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Table, Modal } from 'react-bootstrap';
-import checkMark from './images/checkMark.png';
 import wrongMark from './images/wrongMark.png';
 import circle from './images/circle.png';
 import white from './images/white.png';
+import { ticTacToeMachine } from "./machine";
+import { useMachine } from "@xstate/react";
 import './App.css';
-import Swal from 'sweetalert2';
 
+function range(start, end) {
+  return Array(end - start)
+    .fill(null)
+    .map((_, i) => i + start);
+}
 
-function App() {
+function generateBoardBoxClassName(index){
+  const classes = ["board-box"];
+
+  if(index<3){
+    classes.push('remove-top-border');
+  }
+
+  if( index>5){
+    classes.push('remove-bottom-border');
+  }
+
+  if(index%3===0){
+    classes.push('remove-left-border');
+  }
+
+  if(index%3===2){
+    classes.push('remove-right-border');
+  }
+
+  return classes.join(' ');
+}
+
+const App = () => {
+  const [current, send] = useMachine(ticTacToeMachine);
+  const { score,
+  whosPlaying,lastWinner,
+  board
+ } = current.context;
     
     const [xTurn, setXTurn] = useState(true);
     const [oTurn, setOTurn] = useState(false);
@@ -235,6 +267,30 @@ function App() {
           </div>
 
           <div className="mr-5 ml-5 mb-5">
+          <Table borderless className="w-25">
+            <div className="text-center table-board">
+             
+            {range(0, 9).map((i) => {
+            return (
+              <div
+                key={i}
+                className = {generateBoardBoxClassName(i)}
+                onClick={(_) => send({ type: "PLAY", whosPlaying, value: i })}
+              >
+                {
+                      (current.context.board[i]==='x') ?
+                        <img src={wrongMark} />
+                      :
+                        (current.context.board[i]==='o') ?
+                          <img src={circle} />
+                        :
+                          <img src={white} />
+                    }
+              </div>
+            );
+          })}
+          </div>
+          </Table>
             <Table borderless className="w-25">
               <tbody className="text-center">
                 <tr className="border-bottom">
@@ -355,9 +411,6 @@ function App() {
             <h5 className="text-center">{oPoint}</h5>
           </div>
         </div>
-
-      
-
         
 
         <div className="mt-4">
@@ -367,9 +420,7 @@ function App() {
         </div>
 
         
-
-
-        <Modal show={show}>
+        <Modal show={show || current.matches("win")}>
           <Modal.Header className="text-center">
             {
               (whoWin == 'x') ?
@@ -420,8 +471,6 @@ function App() {
             </Button>
           </Modal.Footer>
         </Modal>
-
-
       </div>
       
   )

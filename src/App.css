@@ -33,8 +33,31 @@ td {
   display: none;
 }
 
-/*@media (max-width: 600px){
-  p {
-    font-size: 55%;
-  }
-}*/
+.table-board {
+  height: 25vmin;
+  width: 25vmin;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.board-box {
+  text-align: center;
+  border: 1px solid #DEE2E6;
+}
+
+.remove-left-border {
+  border-left: none;
+}
+
+.remove-right-border {
+  border-right: none;
+}
+
+.remove-top-border {
+  border-top: none;
+}
+
+.remove-bottom-border {
+  border-bottom: none;
+}
