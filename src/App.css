@@ -13,7 +13,7 @@ ul {
 }
 
 img {
-
+  display: block;
   width: 40px;
 }
 
@@ -34,15 +34,15 @@ td {
 }
 
 .table-board {
-  height: 25vmin;
-  width: 25vmin;
+  height: 12rem;
+  width: 12rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 }
 
 .board-box {
-  text-align: center;
+  padding: 0.8rem;
   border: 1px solid #DEE2E6;
 }
 

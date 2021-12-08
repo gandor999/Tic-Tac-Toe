@@ -1,4 +1,4 @@
-import { createMachine } from 'xstate';
+import { createMachine, assign } from 'xstate';
 
 const evaluateWin = (ctx) => {
   const { board } = ctx;
@@ -30,7 +30,22 @@ const evaluateWin = (ctx) => {
       return true;
     }
   }
+  return false;
 };
+
+const isValidMove = (ctx, event) => {
+  return ctx.board[event.value] === null;
+};
+
+const updateBoard = assign({
+  board: (context, event) => {
+    const updatedBoard = [...context.board];
+    updatedBoard[event.value] = context.whosPlaying;
+    return updatedBoard;
+  },
+  whosPlaying: context => (context.whosPlaying === "x" ? "o" : "x"),
+  lastWinner: context =>  context.whosPlaying
+});
 
 const ticTacToeMachine = createMachine({
   id: 'ticTactToe',
@@ -47,21 +62,18 @@ const ticTacToeMachine = createMachine({
   states: {
     onGame: {
       on: {
+        "": [
+          { target: "win", cond: "evaluateWin" },
+          { target: "draw", cond: "evaluateDraw" }
+        ],
         ONCLICK: [
           {
-            cond: 'evaluateWin',
-            target: 'win'
-          },
-          {
-            cond: 'evaluateDraw',
-            target: 'draw'
-          },
-          {
-            target: 'onGame'
+            target: 'onGame',
+            cond: "isValidMove",
+            actions: "updateBoard"
           }
         ]
       },
-      exit: 'updateBoard',
       meta: {
         message: 'hola wey'
       }
@@ -89,11 +101,11 @@ const ticTacToeMachine = createMachine({
     evaluateWin,
     evaluateDraw: (context) => {
       return false;
-    }
+    },
+    isValidMove
   },
   actions: {
     updateScore: (context, event) => {
-      // score update must be here :P
       const { winner } = event;
 
       if(winner === "o") {
@@ -108,19 +120,10 @@ const ticTacToeMachine = createMachine({
       context.score.x = 0;
       context.board = Array(9).fill(null);
     },
-    updateBoard: (context, event) => {
-      // who played and what was the play?
-      const { winner } = event;
-      
-      if(winner === "o") {
-        context.lastWinner = "o";
-        context.whosPlaying = "x";
-      }else{
-        context.lastWinner = "x";
-        context.whosPlaying = "o";
-      }
-    }
+    updateBoard
   }
 });
+
+
 
 export { ticTacToeMachine };

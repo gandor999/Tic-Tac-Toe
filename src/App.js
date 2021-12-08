@@ -275,7 +275,7 @@ const App = () => {
               <div
                 key={i}
                 className = {generateBoardBoxClassName(i)}
-                onClick={(_) => send({ type: "PLAY", whosPlaying, value: i })}
+                onClick={(_) => send({ type: "ONCLICK", whosPlaying, value: i })}
               >
                 {
                       (current.context.board[i]==='x') ?
