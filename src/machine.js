@@ -94,12 +94,31 @@ const ticTacToeMachine = createMachine({
   actions: {
     updateScore: (context, event) => {
       // score update must be here :P
+      const { winner } = event;
+
+      if(winner === "o") {
+        context.score.o++;
+      }else{
+        context.score.x++;
+      }
     },
     resetBoard: (context, event) => {
       // Clean all the context varaibles in order to start a new game board
+      context.score.o = 0;
+      context.score.x = 0;
+      context.board = Array(9).fill(null);
     },
     updateBoard: (context, event) => {
       // who played and what was the play?
+      const { winner } = event;
+      
+      if(winner === "o") {
+        context.lastWinner = "o";
+        context.whosPlaying = "x";
+      }else{
+        context.lastWinner = "x";
+        context.whosPlaying = "o";
+      }
     }
   }
 });
